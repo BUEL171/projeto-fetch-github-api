@@ -27,7 +27,7 @@ function getUserProfile(userName) {
                         </div>`
         document.querySelector('.profile-data').innerHTML = userinfo
 
-        getUserRepositories(userName)
+        getUserRepositories(userName) 
     })
 }
 
