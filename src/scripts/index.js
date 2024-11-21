@@ -1,9 +1,12 @@
-import { user } from "/src/scripts/services/user.js"
-import { repositories } from "/src/scripts/services/repositories.js"
+import { getUser } from "/src/scripts/services/user.js"
+import { getRepositories } from "/src/scripts/services/repositories.js"
+
+import { user } from "/src/scripts/objects/user.js"
+import { screen } from "/src/scripts/objects/screen.js"
 
 document.getElementById("btn-search").addEventListener("click", () => {
     const userName = document.getElementById("input-search").value
-    getUserProfile(userName)
+    getUserData(userName)
 })
 
 document.getElementById("input-search").addEventListener("keyup", (e) => {
@@ -12,36 +15,17 @@ document.getElementById("input-search").addEventListener("keyup", (e) => {
     const isEnterKeyPressed = key === 13
 
     if (isEnterKeyPressed) {
-        getUserProfile(username)
+        getUserData(username)
     }
 })
 
-function getUserProfile(userName) {
-    user(userName).then(userData => {
-        let userinfo = `<div class="info">
-                            <img src="${userData.avatar_url}" alt="Foto do perfil do usuario" />
-                                <div class="data">
-                                    <h1>${userData.name ?? 'Nao possui nome cadastrado'}</h1>
-                                    <p>${userData.bio ?? 'Nao possui bio cadastrada'}</p>
-                                </div>
-                        </div>`
-        document.querySelector('.profile-data').innerHTML = userinfo
+async function getUserData(userName) {
 
-        getUserRepositories(userName) 
-    })
-}
+    const userResponse = await getUser(userName)
+    const repositoriesResponse = await getRepositories(userName)
 
-function getUserRepositories(userName){
-    repositories(userName).then(reposData => {
-        let repositoriesItens = ""
+    user.setInfo(userResponse)
+    user.setRepositories(repositoriesResponse)
 
-        reposData.forEach(repo => {
-            repositoriesItens += `<li><a href="${repo.html_url}" target="_blank">${repo.name}</a></li>`
-        });
-
-        document.querySelector(".profile-data").innerHTML += `<div class="repositories section">
-                                                                <h2>Repositorios</h2>
-                                                                <ul>${repositoriesItens}</ul>
-                                                              </div>`
-    })
+    screen.renderUser(user)
 }
