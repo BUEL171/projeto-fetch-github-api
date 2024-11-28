@@ -18,7 +18,7 @@ const screen = {
                                                 <ul>${repositoriesItens}</ul>
                                            </div> `
         }
-    },
+    }, 
     renderNotFound(){
         this.userProfile.innerHTML = "<h3>Usuario nao encontrado</h3>"
     }
